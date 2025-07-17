@@ -2,133 +2,207 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login Page with Validation</title>
+  <title>Login & Signup Page</title>
   <style>
     body {
       font-family: Arial;
       background: linear-gradient(to right, #74ebd5, #ACB6E5);
-      display: flex;
       height: 100vh;
+      margin: 0;
+      display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      margin: 0;
     }
-    .container {
+    .tabs {
       background: white;
       padding: 30px 50px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
-      display: none;
-      width: 300px;
-      text-align: center;
+      width: 320px;
     }
-    input {
-      display: block;
-      margin: 10px auto;
+    .tab-btns {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .tab-btns button {
+      flex: 1;
       padding: 10px;
-      width: 90%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      padding: 8px 16px;
-      margin-top: 10px;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
+      background-color: #eee;
+    }
+    .tab-btns button.active {
       background-color: #007BFF;
       color: white;
     }
-    button:hover {
-      background-color: #0056b3;
+    .form-container {
+      display: none;
+    }
+    .form-container.active {
+      display: block;
+    }
+    input, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button[type="submit"] {
+      background-color: #007BFF;
+      color: white;
+      border: none;
     }
     .message {
       color: red;
-      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Login Section -->
-  <div class="container" id="loginSection">
-    <h2>Login</h2>
+<div class="tabs">
+  <div class="tab-btns">
+    <button id="loginTab" class="active">Login</button>
+    <button id="signupTab">Sign Up</button>
+  </div>
+
+  <div class="form-container active" id="loginSection">
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Username (Start with Capital)" required>
-      <input type="password" id="password" placeholder="Password (Start with Capital)" required>
+      <input type="text" id="loginUsername" placeholder="Username" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
       <button type="submit">Login</button>
-      <button type="reset">Reset</button>
     </form>
-    <div class="message" id="message"></div>
+    <div class="message" id="loginMessage"></div>
   </div>
-
-  <!-- Inside Section -->
-  <div class="container" id="insideSection">
-    <h2>Welcome!</h2>
-    <p id="welcomeText"></p>
-    <button onclick="logout()">Logout</button>
+  <div class="form-container" id="signupSection">
+    <form id="signupForm">
+      <input type="text" id="firstName" placeholder="First Name" required>
+      <input type="text" id="middleName" placeholder="Middle Name (optional)">
+      <input type="text" id="lastName" placeholder="Last Name" required>
+      <input type="text" id="signupUsername" placeholder="Username" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="message" id="signupMessage"></div>
   </div>
+</div>
+<div class="tabs" id="insideSection" style="display: none;">
+  <h2>Welcome!</h2>
+  <p id="welcomeText"></p>
+  <button onclick="logout()">Logout</button>
+</div>
 
-  <script>
-    const validUsers = ["Sravani", "Hepsibha", "Sathwika"];
-    const validPassword = "Sravani@12345";
+<script>
+  const loginTab = document.getElementById("loginTab");
+  const signupTab = document.getElementById("signupTab");
+  const loginSection = document.getElementById("loginSection");
+  const signupSection = document.getElementById("signupSection");
+  loginTab.onclick = () => {
+    loginTab.classList.add("active");
+    signupTab.classList.remove("active");
+    loginSection.classList.add("active");
+    signupSection.classList.remove("active");
+  };
 
-    // On page load
-    if (localStorage.getItem("isLoggedIn") === "true") {
-      showInsidePage(localStorage.getItem("username"));
+  signupTab.onclick = () => {
+    signupTab.classList.add("active");
+    loginTab.classList.remove("active");
+    signupSection.classList.add("active");
+    loginSection.classList.remove("active");
+  };
+  if (localStorage.getItem("isLoggedIn") === "true") {
+    showInsidePage(localStorage.getItem("username"));
+  }
+
+  
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const message = document.getElementById("loginMessage");
+
+    if (!/^[A-Z]/.test(username)) {
+      alert("Username must start with a capital letter.");
+      return;
+    }
+    if (!/^[A-Z]/.test(password)) {
+      alert("Password must start with a capital letter.");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || {};
+    if (users[username] && users[username].password === password) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("username", username);
+      showInsidePage(username);
     } else {
-      document.getElementById("loginSection").style.display = "block";
+      message.innerText = "Invalid credentials.";
+    }
+  });
+  document.getElementById("signupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const middleName = document.getElementById("middleName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const username = document.getElementById("signupUsername").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const phone = document.getElementById("phoneNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("signupMessage");
+
+    if (!/^[A-Z]/.test(firstName) || !/^[A-Z]/.test(lastName)) {
+      alert("First and Last names must start with a capital letter.");
+      return;
+    }
+    if (middleName && !/^[A-Z]/.test(middleName)) {
+      alert("Middle name must start with a capital letter.");
+      return;
+    }
+    if (!/^[A-Z]/.test(username)) {
+      alert("Username must start with a capital letter.");
+      return;
+    }
+    if (!/^[A-Z]/.test(password)) {
+      alert("Password must start with a capital letter.");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Phone number must be exactly 10 digits.");
+      return;
+    }
+    if (!/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      alert("Invalid email format.");
+      return;
     }
 
-    // Login handling
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
-      const message = document.getElementById("message");
-
-      // Username validation
-      if (!/^[A-Z]/.test(username)) {
-        alert("Username must start with a capital letter.");
-        return;
-      }
-
-      // Password validation
-      if (!/^[A-Z]/.test(password)) {
-        alert("Password must start with a capital letter.");
-        return;
-      }
-
-      // Check credentials
-      if (validUsers.includes(username) && password === validPassword) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("username", username);
-        showInsidePage(username);
-      } else {
-        message.style.color = "red";
-        message.innerText = "Invalid username or password.";
-      }
-    });
-
-    // Show dashboard
-    function showInsidePage(username) {
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("insideSection").style.display = "block";
-      document.getElementById("welcomeText").innerText =
-        `Hello, ${username}! You are successfully logged in.`;
+    const users = JSON.parse(localStorage.getItem("users")) || {};
+    if (users[username]) {
+      message.innerText = "User already exists.";
+    } else {
+      users[username] = { password, firstName, lastName, phone, email };
+      localStorage.setItem("users", JSON.stringify(users));
+      message.style.color = "green";
+      message.innerText = "Signup successful! Please login.";
     }
+  });
 
-    // Logout
-    function logout() {
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("username");
-      document.getElementById("insideSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "block";
-      document.getElementById("loginForm").reset();
-      document.getElementById("message").innerText = "";
-    }
-  </script>
+  function showInsidePage(username) {
+    document.querySelector(".tabs").style.display = "none";
+    document.getElementById("insideSection").style.display = "block";
+    document.getElementById("welcomeText").innerText = `Hello, ${username}! You're logged in.`;
+  }
+
+  function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    location.reload();
+  }
+</script>
 
 </body>
 </html>
