@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login & Signup Page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal</title>
   <style>
     body {
       font-family: Arial;
       background: linear-gradient(to right, #74ebd5, #ACB6E5);
-      height: 100vh;
       margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      padding: 0;
     }
     .tabs {
+      max-width: 400px;
+      margin: 40px auto;
       background: white;
       padding: 30px 50px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
-      width: 320px;
     }
     .tab-btns {
       display: flex;
@@ -29,19 +28,13 @@
       flex: 1;
       padding: 10px;
       border: none;
-      cursor: pointer;
       font-weight: bold;
       background-color: #eee;
+      cursor: pointer;
     }
     .tab-btns button.active {
       background-color: #007BFF;
       color: white;
-    }
-    .form-container {
-      display: none;
-    }
-    .form-container.active {
-      display: block;
     }
     input, button {
       width: 100%;
@@ -55,14 +48,50 @@
       color: white;
       border: none;
     }
+    .form-container {
+      display: none;
+    }
+    .form-container.active {
+      display: block;
+    }
     .message {
       color: red;
+    }
+    .dashboard {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      background: #007BFF;
+      color: white;
+      padding: 10px;
+    }
+    .nav-bar button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .content-section {
+      display: none;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .content-section.active {
+      display: block;
     }
   </style>
 </head>
 <body>
 
-<div class="tabs">
+<div class="tabs" id="authSection">
   <div class="tab-btns">
     <button id="loginTab" class="active">Login</button>
     <button id="signupTab">Sign Up</button>
@@ -70,30 +99,48 @@
 
   <div class="form-container active" id="loginSection">
     <form id="loginForm">
-      <input type="text" id="loginUsername" placeholder="Username" required>
-      <input type="password" id="loginPassword" placeholder="Password" required>
+      <input type="text" id="loginUsername" placeholder="Username" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
       <button type="submit">Login</button>
     </form>
     <div class="message" id="loginMessage"></div>
   </div>
+
   <div class="form-container" id="signupSection">
     <form id="signupForm">
-      <input type="text" id="firstName" placeholder="First Name" required>
-      <input type="text" id="middleName" placeholder="Middle Name (optional)">
-      <input type="text" id="lastName" placeholder="Last Name" required>
-      <input type="text" id="signupUsername" placeholder="Username" required>
-      <input type="password" id="signupPassword" placeholder="Password" required>
-      <input type="text" id="phoneNumber" placeholder="Phone Number" required>
-      <input type="email" id="email" placeholder="Email" required>
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="middleName" placeholder="Middle Name (optional)" />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+      <input type="text" id="signupUsername" placeholder="Username" required />
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <input type="text" id="phoneNumber" placeholder="Phone Number" required />
+      <input type="email" id="email" placeholder="Email" required />
       <button type="submit">Sign Up</button>
     </form>
     <div class="message" id="signupMessage"></div>
   </div>
 </div>
-<div class="tabs" id="insideSection" style="display: none;">
-  <h2>Welcome!</h2>
-  <p id="welcomeText"></p>
-  <button onclick="logout()">Logout</button>
+
+<div class="dashboard" id="dashboard" style="display: none">
+  <div class="nav-bar">
+    <span id="welcomeUser">Welcome</span>
+    <div>
+      <button onclick="showTab('home')">Home</button>
+      <button onclick="showTab('profile')">Profile</button>
+      <button onclick="showTab('courses')">Courses</button>
+      <button onclick="showTab('assignments')">Assignments</button>
+      <button onclick="showTab('results')">Results</button>
+      <button onclick="showTab('settings')">Settings</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div id="home" class="content-section active">This is your Home Dashboard.</div>
+  <div id="profile" class="content-section">Your profile details will go here.</div>
+  <div id="courses" class="content-section">Courses you're enrolled in will show here.</div>
+  <div id="assignments" class="content-section">All your assignments will be listed here.</div>
+  <div id="results" class="content-section">Your academic results and performance.</div>
+  <div id="settings" class="content-section">User preferences and account settings.</div>
 </div>
 
 <script>
@@ -101,6 +148,7 @@
   const signupTab = document.getElementById("signupTab");
   const loginSection = document.getElementById("loginSection");
   const signupSection = document.getElementById("signupSection");
+
   loginTab.onclick = () => {
     loginTab.classList.add("active");
     signupTab.classList.remove("active");
@@ -114,38 +162,27 @@
     signupSection.classList.add("active");
     loginSection.classList.remove("active");
   };
+
   if (localStorage.getItem("isLoggedIn") === "true") {
-    showInsidePage(localStorage.getItem("username"));
+    showDashboard(localStorage.getItem("username"));
   }
 
-  
-  document.getElementById("loginForm").addEventListener("submit", function (e) {
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const username = document.getElementById("loginUsername").value.trim();
     const password = document.getElementById("loginPassword").value;
-    const message = document.getElementById("loginMessage");
-
-    if (!/^[A-Z]/.test(username)) {
-      alert("Username must start with a capital letter.");
-      return;
-    }
-    if (!/^[A-Z]/.test(password)) {
-      alert("Password must start with a capital letter.");
-      return;
-    }
-
     const users = JSON.parse(localStorage.getItem("users")) || {};
     if (users[username] && users[username].password === password) {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("username", username);
-      showInsidePage(username);
+      showDashboard(username);
     } else {
-      message.innerText = "Invalid credentials.";
+      document.getElementById("loginMessage").innerText = "Invalid credentials.";
     }
   });
-  document.getElementById("signupForm").addEventListener("submit", function (e) {
-    e.preventDefault();
 
+  document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault();
     const firstName = document.getElementById("firstName").value.trim();
     const middleName = document.getElementById("middleName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
@@ -153,54 +190,33 @@
     const password = document.getElementById("signupPassword").value;
     const phone = document.getElementById("phoneNumber").value.trim();
     const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("signupMessage");
-
-    if (!/^[A-Z]/.test(firstName) || !/^[A-Z]/.test(lastName)) {
-      alert("First and Last names must start with a capital letter.");
-      return;
-    }
-    if (middleName && !/^[A-Z]/.test(middleName)) {
-      alert("Middle name must start with a capital letter.");
-      return;
-    }
-    if (!/^[A-Z]/.test(username)) {
-      alert("Username must start with a capital letter.");
-      return;
-    }
-    if (!/^[A-Z]/.test(password)) {
-      alert("Password must start with a capital letter.");
-      return;
-    }
-    if (!/^\d{10}$/.test(phone)) {
-      alert("Phone number must be exactly 10 digits.");
-      return;
-    }
-    if (!/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      alert("Invalid email format.");
-      return;
-    }
 
     const users = JSON.parse(localStorage.getItem("users")) || {};
     if (users[username]) {
-      message.innerText = "User already exists.";
+      document.getElementById("signupMessage").innerText = "User already exists.";
     } else {
       users[username] = { password, firstName, lastName, phone, email };
       localStorage.setItem("users", JSON.stringify(users));
-      message.style.color = "green";
-      message.innerText = "Signup successful! Please login.";
+      document.getElementById("signupMessage").style.color = "green";
+      document.getElementById("signupMessage").innerText = "Signup successful! Please login.";
     }
   });
 
-  function showInsidePage(username) {
-    document.querySelector(".tabs").style.display = "none";
-    document.getElementById("insideSection").style.display = "block";
-    document.getElementById("welcomeText").innerText = `Hello, ${username}! You're logged in.`;
+  function showDashboard(username) {
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("welcomeUser").innerText = `Welcome, ${username}`;
   }
 
   function logout() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("username");
     location.reload();
+  }
+
+  function showTab(tabId) {
+    document.querySelectorAll(".content-section").forEach(el => el.classList.remove("active"));
+    document.getElementById(tabId).classList.add("active");
   }
 </script>
 
