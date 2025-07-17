@@ -2,29 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login Page with Session</title>
+  <title>Login Page with Validation</title>
   <style>
     body {
       font-family: Arial;
-      background-color: #f2f2f2;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
       display: flex;
       height: 100vh;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      margin: 0;
     }
     .container {
       background: white;
-      padding: 20px 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      padding: 30px 50px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
       display: none;
+      width: 300px;
+      text-align: center;
     }
     input {
       display: block;
-      margin: 10px 0;
-      padding: 8px;
-      width: 100%;
+      margin: 10px auto;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 8px 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     .message {
       color: red;
@@ -38,8 +55,8 @@
   <div class="container" id="loginSection">
     <h2>Login</h2>
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
+      <input type="text" id="username" placeholder="Username (Start with Capital)" required>
+      <input type="password" id="password" placeholder="Password (Start with Capital)" required>
       <button type="submit">Login</button>
       <button type="reset">Reset</button>
     </form>
@@ -48,44 +65,64 @@
 
   <!-- Inside Section -->
   <div class="container" id="insideSection">
-    <h2>Welcome, Admin!</h2>
-    <p>This is your dashboard. You're logged in.</p>
+    <h2>Welcome!</h2>
+    <p id="welcomeText"></p>
     <button onclick="logout()">Logout</button>
   </div>
 
   <script>
-    // Check if user is already logged in
+    const validUsers = ["Sravani", "Kashyap", "Kalyan"];
+    const validPassword = "Sravani@12345";
+
+    // On page load
     if (localStorage.getItem("isLoggedIn") === "true") {
-      showInsidePage();
+      showInsidePage(localStorage.getItem("username"));
     } else {
       document.getElementById("loginSection").style.display = "block";
     }
 
-    // Handle login form
+    // Login handling
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const username = document.getElementById("username").value;
+      const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
       const message = document.getElementById("message");
 
-      if (username === "sravani" && password === "1234") {
+      // Username validation
+      if (!/^[A-Z]/.test(username)) {
+        alert("Username must start with a capital letter.");
+        return;
+      }
+
+      // Password validation
+      if (!/^[A-Z]/.test(password)) {
+        alert("Password must start with a capital letter.");
+        return;
+      }
+
+      // Check credentials
+      if (validUsers.includes(username) && password === validPassword) {
         localStorage.setItem("isLoggedIn", "true");
-        showInsidePage();
+        localStorage.setItem("username", username);
+        showInsidePage(username);
       } else {
         message.style.color = "red";
-        message.innerText = "Invalid credentials!";
+        message.innerText = "Invalid username or password.";
       }
     });
 
-    // Show inside section
-    function showInsidePage() {
+    // Show dashboard
+    function showInsidePage(username) {
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("insideSection").style.display = "block";
+      document.getElementById("welcomeText").innerText =
+        `Hello, ${username}! You are successfully logged in.`;
     }
 
-    // Logout function
+    // Logout
     function logout() {
       localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("username");
       document.getElementById("insideSection").style.display = "none";
       document.getElementById("loginSection").style.display = "block";
       document.getElementById("loginForm").reset();
