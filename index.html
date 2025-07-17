@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login Page</title>
+  <title>Login Page with Session</title>
   <style>
     body {
       font-family: Arial;
@@ -11,12 +11,14 @@
       height: 100vh;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
-    .login-container {
+    .container {
       background: white;
       padding: 20px 40px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
     }
     input {
       display: block;
@@ -32,33 +34,63 @@
 </head>
 <body>
 
-  <div class="login-container">
+  <!-- Login Section -->
+  <div class="container" id="loginSection">
     <h2>Login</h2>
     <form id="loginForm">
       <input type="text" id="username" placeholder="Username" required>
       <input type="password" id="password" placeholder="Password" required>
-      <button type="submit" id="loginBtn">Login</button>
+      <button type="submit">Login</button>
       <button type="reset">Reset</button>
     </form>
     <div class="message" id="message"></div>
   </div>
 
+  <!-- Inside Section -->
+  <div class="container" id="insideSection">
+    <h2>Welcome, Admin!</h2>
+    <p>This is your dashboard. You're logged in.</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
   <script>
-    document.getElementById("loginForm").addEventListener("submit",
-function(e) {
+    // Check if user is already logged in
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      showInsidePage();
+    } else {
+      document.getElementById("loginSection").style.display = "block";
+    }
+
+    // Handle login form
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
       const message = document.getElementById("message");
 
       if (username === "admin" && password === "1234") {
-        message.style.color = "green";
-        message.innerText = "Login successful!";
+        localStorage.setItem("isLoggedIn", "true");
+        showInsidePage();
       } else {
         message.style.color = "red";
         message.innerText = "Invalid credentials!";
       }
     });
+
+    // Show inside section
+    function showInsidePage() {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("insideSection").style.display = "block";
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      document.getElementById("insideSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("loginForm").reset();
+      document.getElementById("message").innerText = "";
+    }
   </script>
 
 </body>
