@@ -7,7 +7,8 @@
   <style>
     body {
       font-family: Arial;
-      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      background: url('https://source.unsplash.com/1600x900/?education,student') no-repeat center center fixed;
+      background-size: cover;
       margin: 0;
       padding: 0;
     }
@@ -58,30 +59,50 @@
       color: red;
     }
     .dashboard {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      backdrop-filter: blur(8px);
     }
     .nav-bar {
-      display: flex;
-      justify-content: space-between;
       background: #007BFF;
       color: white;
-      padding: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-width: 200px;
     }
     .nav-bar button {
       background: transparent;
       border: none;
       color: white;
       font-weight: bold;
+      padding: 10px;
+      margin: 5px 0;
       cursor: pointer;
+      text-align: left;
+    }
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+    }
+    .welcome {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-align: center;
     }
     .content-section {
       display: none;
       padding: 20px;
       background: #fff;
       border-radius: 8px;
-      margin-top: 10px;
+      width: 100%;
+      max-width: 600px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .content-section.active {
@@ -123,24 +144,23 @@
 
 <div class="dashboard" id="dashboard" style="display: none">
   <div class="nav-bar">
-    <span id="welcomeUser">Welcome</span>
-    <div>
-      <button onclick="showTab('home')">Home</button>
-      <button onclick="showTab('profile')">Profile</button>
-      <button onclick="showTab('courses')">Courses</button>
-      <button onclick="showTab('assignments')">Assignments</button>
-      <button onclick="showTab('results')">Results</button>
-      <button onclick="showTab('settings')">Settings</button>
-      <button onclick="logout()">Logout</button>
-    </div>
+    <button onclick="showTab('home')">Home</button>
+    <button onclick="showTab('profile')">Profile</button>
+    <button onclick="showTab('courses')">Courses</button>
+    <button onclick="showTab('assignments')">Assignments</button>
+    <button onclick="showTab('results')">Results</button>
+    <button onclick="showTab('settings')">Settings</button>
+    <button onclick="logout()">Logout</button>
   </div>
-
-  <div id="home" class="content-section active">This is your Home Dashboard.</div>
-  <div id="profile" class="content-section">Your profile details will go here.</div>
-  <div id="courses" class="content-section">Courses you're enrolled in will show here.</div>
-  <div id="assignments" class="content-section">All your assignments will be listed here.</div>
-  <div id="results" class="content-section">Your academic results and performance.</div>
-  <div id="settings" class="content-section">User preferences and account settings.</div>
+  <div class="main-content">
+    <div class="welcome" id="welcomeUser">Welcome</div>
+    <div id="home" class="content-section active">Welcome to your home dashboard. Access recent announcements and news here.</div>
+    <div id="profile" class="content-section">Profile section: View and update your personal details and preferences.</div>
+    <div id="courses" class="content-section">Courses section: Browse your enrolled courses and class schedules.</div>
+    <div id="assignments" class="content-section">Assignments section: Check deadlines and submit your tasks.</div>
+    <div id="results" class="content-section">Results section: Track your academic performance and grades.</div>
+    <div id="settings" class="content-section">Settings section: Manage your account and notification preferences.</div>
+  </div>
 </div>
 
 <script>
@@ -204,8 +224,8 @@
 
   function showDashboard(username) {
     document.getElementById("authSection").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    document.getElementById("welcomeUser").innerText = `Welcome, ${username}`;
+    document.getElementById("dashboard").style.display = "flex";
+    document.getElementById("welcomeUser").innerText = `Hello, ${username}!`;
   }
 
   function logout() {
