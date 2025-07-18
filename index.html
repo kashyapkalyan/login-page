@@ -7,15 +7,14 @@
   <style>
     body {
       font-family: Arial;
-      background: url('https://source.unsplash.com/1600x900/?education,student') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(to right, #FFDEE9, #B5FFFC);
       margin: 0;
       padding: 0;
     }
     .tabs {
       max-width: 400px;
       margin: 40px auto;
-      background: white;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
       padding: 30px 50px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
@@ -62,7 +61,7 @@
       padding: 0;
       display: flex;
       height: 100vh;
-      backdrop-filter: blur(8px);
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
     }
     .nav-bar {
       background: #007BFF;
@@ -85,16 +84,15 @@
     .main-content {
       flex: 1;
       padding: 40px;
+      background: rgba(255, 255, 255, 0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #333;
     }
     .welcome {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 30px;
-      text-align: center;
     }
     .content-section {
       display: none;
@@ -154,12 +152,12 @@
   </div>
   <div class="main-content">
     <div class="welcome" id="welcomeUser">Welcome</div>
-    <div id="home" class="content-section active">Welcome to your home dashboard. Access recent announcements and news here.</div>
-    <div id="profile" class="content-section">Profile section: View and update your personal details and preferences.</div>
-    <div id="courses" class="content-section">Courses section: Browse your enrolled courses and class schedules.</div>
-    <div id="assignments" class="content-section">Assignments section: Check deadlines and submit your tasks.</div>
-    <div id="results" class="content-section">Results section: Track your academic performance and grades.</div>
-    <div id="settings" class="content-section">Settings section: Manage your account and notification preferences.</div>
+    <div id="home" class="content-section active">This is your Home Dashboard.</div>
+    <div id="profile" class="content-section">Your profile details will go here.</div>
+    <div id="courses" class="content-section">Courses you're enrolled in will show here.</div>
+    <div id="assignments" class="content-section">All your assignments will be listed here.</div>
+    <div id="results" class="content-section">Your academic results and performance.</div>
+    <div id="settings" class="content-section">User preferences and account settings.</div>
   </div>
 </div>
 
