@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Portal</title>
   <style>
     body {
       font-family: Arial;
-      background: #121212;
       margin: 0;
       padding: 0;
-      color: #fff;
     }
     .tabs {
       max-width: 400px;
       margin: 40px auto;
-      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f'); 
+      background-size: cover;
+      background-position: center;
       padding: 30px 50px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+      color: #fff;
     }
     .tab-btns {
       display: flex;
@@ -30,26 +30,24 @@
       padding: 10px;
       border: none;
       font-weight: bold;
-      background-color: #333;
-      color: #fff;
+      background-color: #ffffffaa;
+      color: #000;
       cursor: pointer;
     }
     .tab-btns button.active {
-      background-color: #6200ea;
+      background-color: #00aaff;
+      color: white;
     }
     input, button {
       width: 100%;
       margin: 8px 0;
       padding: 10px;
       border-radius: 5px;
-      border: 1px solid #555;
-      background: #222;
-      color: #fff;
+      border: none;
     }
     button[type="submit"] {
-      background-color: #6200ea;
+      background-color: #00aaff;
       color: white;
-      border: none;
     }
     .form-container {
       display: none;
@@ -61,33 +59,32 @@
       color: red;
     }
     .dashboard {
-      padding: 0;
-      display: flex;
+      display: none;
       height: 100vh;
-      background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+      background: linear-gradient(to right, #f3f9ff, #e1eaff);
+      color: #333;
     }
     .nav-bar {
-      background: #1f1f1f;
-      color: white;
+      background: #ffffff;
+      border-right: 1px solid #ccc;
       padding: 20px;
       display: flex;
       flex-direction: column;
       min-width: 200px;
     }
     .nav-bar button {
-      background: transparent;
+      background: none;
       border: none;
-      color: white;
       font-weight: bold;
       padding: 10px;
       margin: 5px 0;
       cursor: pointer;
       text-align: left;
+      font-size: 16px;
     }
     .main-content {
       flex: 1;
       padding: 40px;
-      background: #1e1e1e;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -101,22 +98,21 @@
     .content-section {
       display: none;
       padding: 20px;
-      background: #2a2a2a;
+      background: #fff;
       border-radius: 8px;
       width: 100%;
       max-width: 600px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .content-section.active {
       display: block;
     }
     .popup {
-      background: #000;
-      color: #fff;
+      background: #eef7ff;
       padding: 15px;
       border-radius: 8px;
       margin-top: 15px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+      color: #333;
     }
   </style>
 </head>
@@ -140,7 +136,7 @@
   <div class="form-container" id="signupSection">
     <form id="signupForm">
       <input type="text" id="firstName" placeholder="First Name" required />
-      <input type="text" id="middleName" placeholder="Middle Name (optional)" />
+      <input type="text" id="middleName" placeholder="Middle Name" />
       <input type="text" id="lastName" placeholder="Last Name" required />
       <input type="text" id="signupUsername" placeholder="Username" required />
       <input type="password" id="signupPassword" placeholder="Password" required />
@@ -152,7 +148,7 @@
   </div>
 </div>
 
-<div class="dashboard" id="dashboard" style="display: none">
+<div class="dashboard" id="dashboard">
   <div class="nav-bar">
     <button onclick="showTab('home')">Home</button>
     <button onclick="showTab('profile')">Profile</button>
@@ -164,7 +160,7 @@
   </div>
   <div class="main-content">
     <div class="welcome" id="welcomeUser">Welcome</div>
-    <div id="home" class="content-section active">This is your Home Dashboard.</div>
+    <div id="home" class="content-section active">Welcome to the Student Dashboard.</div>
     <div id="profile" class="content-section">
       <p>Edit Profile:</p>
       <input type="text" id="editName" placeholder="Full Name">
@@ -180,9 +176,9 @@
       <button onclick="showCourseDetails('IT')">IT</button>
       <div id="courseDetails"></div>
     </div>
-    <div id="assignments" class="content-section">All your assignments will be listed here.</div>
-    <div id="results" class="content-section">Your academic results and performance.</div>
-    <div id="settings" class="content-section">User preferences and account settings.</div>
+    <div id="assignments" class="content-section">Assignment submissions and deadlines will appear here.</div>
+    <div id="results" class="content-section">Your academic performance and grade reports.</div>
+    <div id="settings" class="content-section">Change password, email preferences, and more.</div>
   </div>
 </div>
 
@@ -226,14 +222,12 @@
 
   document.getElementById("signupForm").addEventListener("submit", function(e) {
     e.preventDefault();
-    const firstName = document.getElementById("firstName").value.trim();
-    const middleName = document.getElementById("middleName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
     const username = document.getElementById("signupUsername").value.trim();
     const password = document.getElementById("signupPassword").value;
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
     const phone = document.getElementById("phoneNumber").value.trim();
     const email = document.getElementById("email").value.trim();
-
     const users = JSON.parse(localStorage.getItem("users")) || {};
     if (users[username]) {
       document.getElementById("signupMessage").innerText = "User already exists.";
@@ -276,13 +270,13 @@
 
   function showCourseDetails(course) {
     const details = {
-      CSE: "CSE (Computer Science and Engineering) deals with the design, development, and maintenance of software systems. It includes subjects like programming, algorithms, and AI. Ideal for those interested in tech innovations and software careers.",
-      ECE: "ECE (Electronics and Communication Engineering) focuses on electronics, signal processing, and communication systems. It suits students interested in IoT, VLSI, and telecom fields.",
-      EEE: "EEE (Electrical and Electronics Engineering) covers power systems, circuit theory, and control systems. Ideal for students aiming for core electrical industry roles and government sector jobs.",
-      IT: "IT (Information Technology) deals with information systems, networking, databases, and cybersecurity. A great branch for cloud computing, data analytics, and system admin careers."
+      CSE: "Computer Science and Engineering (CSE) is the study of computers, computational systems, algorithms, and programming. Ideal for those interested in software development, AI, and innovation in technology.",
+      ECE: "Electronics and Communication Engineering deals with electronic circuits, communication equipment like transmitters, receivers, and integrated circuits. A perfect field for those into embedded systems and signal processing.",
+      EEE: "Electrical and Electronics Engineering focuses on generation, transmission, and distribution of electricity. Students learn electrical machines, control systems, and renewable energy systems.",
+      IT: "Information Technology deals with managing, processing, and securing data through networks and systems. It includes cybersecurity, networking, cloud computing, and data analytics."
     };
     const div = document.getElementById("courseDetails");
-    div.innerHTML = `<div class='popup'>${details[course]}</div>`;
+    div.innerHTML = `<div class="popup">${details[course]}</div>`;
   }
 </script>
 
