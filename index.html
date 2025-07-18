@@ -7,17 +7,18 @@
   <style>
     body {
       font-family: Arial;
-      background: linear-gradient(to right, #FFDEE9, #B5FFFC);
+      background: #121212;
       margin: 0;
       padding: 0;
+      color: #fff;
     }
     .tabs {
       max-width: 400px;
       margin: 40px auto;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      background: #1e1e1e;
       padding: 30px 50px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
     }
     .tab-btns {
       display: flex;
@@ -29,22 +30,24 @@
       padding: 10px;
       border: none;
       font-weight: bold;
-      background-color: #eee;
+      background-color: #333;
+      color: #fff;
       cursor: pointer;
     }
     .tab-btns button.active {
-      background-color: #007BFF;
-      color: white;
+      background-color: #6200ea;
     }
     input, button {
       width: 100%;
       margin: 8px 0;
       padding: 10px;
       border-radius: 5px;
-      border: 1px solid #ccc;
+      border: 1px solid #555;
+      background: #222;
+      color: #fff;
     }
     button[type="submit"] {
-      background-color: #007BFF;
+      background-color: #6200ea;
       color: white;
       border: none;
     }
@@ -61,10 +64,10 @@
       padding: 0;
       display: flex;
       height: 100vh;
-      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      background: #121212;
     }
     .nav-bar {
-      background: #007BFF;
+      background: #1f1f1f;
       color: white;
       padding: 20px;
       display: flex;
@@ -84,7 +87,7 @@
     .main-content {
       flex: 1;
       padding: 40px;
-      background: rgba(255, 255, 255, 0.8);
+      background: #1e1e1e;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -93,15 +96,16 @@
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 30px;
+      text-align: center;
     }
     .content-section {
       display: none;
       padding: 20px;
-      background: #fff;
+      background: #2a2a2a;
       border-radius: 8px;
       width: 100%;
       max-width: 600px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
     .content-section.active {
       display: block;
@@ -153,8 +157,21 @@
   <div class="main-content">
     <div class="welcome" id="welcomeUser">Welcome</div>
     <div id="home" class="content-section active">This is your Home Dashboard.</div>
-    <div id="profile" class="content-section">Your profile details will go here.</div>
-    <div id="courses" class="content-section">Courses you're enrolled in will show here.</div>
+    <div id="profile" class="content-section">
+      <p>Edit Profile:</p>
+      <input type="text" id="editName" placeholder="Full Name">
+      <input type="text" id="editPhone" placeholder="Phone Number">
+      <input type="password" id="editPassword" placeholder="New Password">
+      <button onclick="updateProfile()">Save Changes</button>
+    </div>
+    <div id="courses" class="content-section">
+      <p>Select a course to view details:</p>
+      <button onclick="showCourseDetails('CSE')">CSE</button>
+      <button onclick="showCourseDetails('ECE')">ECE</button>
+      <button onclick="showCourseDetails('EEE')">EEE</button>
+      <button onclick="showCourseDetails('IT')">IT</button>
+      <div id="courseDetails"></div>
+    </div>
     <div id="assignments" class="content-section">All your assignments will be listed here.</div>
     <div id="results" class="content-section">Your academic results and performance.</div>
     <div id="settings" class="content-section">User preferences and account settings.</div>
@@ -235,6 +252,28 @@
   function showTab(tabId) {
     document.querySelectorAll(".content-section").forEach(el => el.classList.remove("active"));
     document.getElementById(tabId).classList.add("active");
+  }
+
+  function updateProfile() {
+    const username = localStorage.getItem("username");
+    const users = JSON.parse(localStorage.getItem("users"));
+    if (users[username]) {
+      users[username].password = document.getElementById("editPassword").value;
+      users[username].phone = document.getElementById("editPhone").value;
+      users[username].firstName = document.getElementById("editName").value;
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Profile updated successfully!");
+    }
+  }
+
+  function showCourseDetails(course) {
+    const details = {
+      CSE: "CSE focuses on programming, algorithms, data structures. Best for students interested in software, AI, ML, and systems.",
+      ECE: "ECE involves electronics, communication systems, and embedded devices. Ideal for those curious about chips, IoT, and networking.",
+      EEE: "EEE deals with electrical systems, motors, and power generation. Suitable for careers in power, railways, and industrial automation.",
+      IT: "IT is centered around information systems, networks, and databases. Great for careers in cloud computing and cybersecurity."
+    };
+    document.getElementById("courseDetails").innerText = details[course] || "Select a valid branch.";
   }
 </script>
 
