@@ -15,10 +15,10 @@
     .tabs {
       max-width: 400px;
       margin: 40px auto;
-      background: #1e1e1e;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
       padding: 30px 50px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
     }
     .tab-btns {
       display: flex;
@@ -64,7 +64,7 @@
       padding: 0;
       display: flex;
       height: 100vh;
-      background: #121212;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     }
     .nav-bar {
       background: #1f1f1f;
@@ -93,7 +93,7 @@
       align-items: center;
     }
     .welcome {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       margin-bottom: 30px;
       text-align: center;
@@ -109,6 +109,14 @@
     }
     .content-section.active {
       display: block;
+    }
+    .popup {
+      background: #000;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
   </style>
 </head>
@@ -240,7 +248,7 @@
   function showDashboard(username) {
     document.getElementById("authSection").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
-    document.getElementById("welcomeUser").innerText = `Hello, ${username}!`;
+    document.getElementById("welcomeUser").innerText = `Hello, ${username}`;
   }
 
   function logout() {
@@ -268,12 +276,13 @@
 
   function showCourseDetails(course) {
     const details = {
-      CSE: "CSE focuses on programming, algorithms, data structures. Best for students interested in software, AI, ML, and systems.",
-      ECE: "ECE involves electronics, communication systems, and embedded devices. Ideal for those curious about chips, IoT, and networking.",
-      EEE: "EEE deals with electrical systems, motors, and power generation. Suitable for careers in power, railways, and industrial automation.",
-      IT: "IT is centered around information systems, networks, and databases. Great for careers in cloud computing and cybersecurity."
+      CSE: "CSE (Computer Science and Engineering) deals with the design, development, and maintenance of software systems. It includes subjects like programming, algorithms, and AI. Ideal for those interested in tech innovations and software careers.",
+      ECE: "ECE (Electronics and Communication Engineering) focuses on electronics, signal processing, and communication systems. It suits students interested in IoT, VLSI, and telecom fields.",
+      EEE: "EEE (Electrical and Electronics Engineering) covers power systems, circuit theory, and control systems. Ideal for students aiming for core electrical industry roles and government sector jobs.",
+      IT: "IT (Information Technology) deals with information systems, networking, databases, and cybersecurity. A great branch for cloud computing, data analytics, and system admin careers."
     };
-    document.getElementById("courseDetails").innerText = details[course] || "Select a valid branch.";
+    const div = document.getElementById("courseDetails");
+    div.innerHTML = `<div class='popup'>${details[course]}</div>`;
   }
 </script>
 
